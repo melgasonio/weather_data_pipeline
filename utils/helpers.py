@@ -1,3 +1,5 @@
+import math
+
 # Tranform a weather api response into a dict with specific keys
 def transform_weather_response(response, timestamp, name):
         transformed_data = {}
@@ -16,9 +18,33 @@ def transform_weather_response(response, timestamp, name):
         transformed_data["temp_max"] = convert_to_celsius(transformed_data["temp_max"])
         
         transformed_data["humidity"] = response["main"]["humidity"]
+        
+        transformed_data["wind_speed"] = response["wind"]["speed"]
+        transformed_data["wind_speed"] = convert_to_kmh(transformed_data["wind_speed"])
 
         return transformed_data
     
 # Convert Kelvin temperature to Celsius
 def convert_to_celsius(kelvin):
-    return kelvin - 273.15
+        return math.floor(kelvin - 273.15)
+
+# Convert wind speed to km/h from m/s
+def convert_to_kmh(windspeed):
+        return math.floor(windspeed * 3.6)
+
+# Create a row in the database table based on the dataframe row
+def query_add_row(table, row):
+        query = f"""
+                INSERT INTO {table} (timepulled, city, weather, temperature,  temperaturemin, temperaturemax, humidity, windspeed)
+                VALUES (
+                        '{row['timestamp']}',
+                        '{row['city']}',
+                        '{row['weather']}',
+                        {row['temp']},
+                        {row['temp_min']},
+                        {row['temp_max']},
+                        {row['humidity']},
+                        {row['wind_speed']}                     
+                )
+        """
+        return query

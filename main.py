@@ -3,8 +3,9 @@ import os
 from datetime import datetime
 
 from utils.openweathermap_api import OpenWeatherMap
+from utils.db_server import DBServer
 from utils.pandas import convert_to_df
-from utils.helpers import transform_weather_response
+from utils.helpers import transform_weather_response, query_add_row
 
 '''
 Construct live weather data of Baguio City, PH and Tokyo, Japan as a dataframe
@@ -13,7 +14,7 @@ Final dataframe only contains temperature and humidity information
 def main():
     # Pull live weather data and leave a timestamp footprint
     load_dotenv()
-    key = os.getenv("API_KEY")
+    key = os.getenv("API_KEY")   
     now = datetime.now().isoformat()
     
     locations = [{"city": "Baguio City", "country_code": "PH"}, {"city": "Tokyo","country_code": "JP"}]
@@ -32,6 +33,27 @@ def main():
     
     df = convert_to_df(responses)
     print(df)
+
+    host = os.getenv("DB_HOST")
+    port = os.getenv("DB_PORT")
+    db = os.getenv("DB_NAME")
+    user = os.getenv("DB_USER")
+    password = os.getenv("DB_PASSWORD")
+    table = os.getenv("DB_TABLE1")
+    keys = {
+        "host": host,
+        "port": port,
+        "db": db,
+        "user": user,
+        "password": password
+    }    
+    db = DBServer(keys)
+    db.connect()
+    # Map df dataframe correctly and add as a row to the database table
+    for _, row in df.iterrows():
+        query = query_add_row(table, row)
+        db.execute_sql(query)
+    db.close()
     
 if __name__ == "__main__":
     main()
