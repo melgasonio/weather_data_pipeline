@@ -5,7 +5,12 @@ from datetime import datetime
 from utils.openweathermap_api import OpenWeatherMap
 from utils.db_server import DBServer
 from utils.pandas import convert_to_df
-from utils.helpers import transform_weather_response, query_add_row
+from utils.helpers import transform_weather_response, query_add_row, query_delete_top
+
+# AWS Lambda handler
+def lambda_handler(event, context):
+    main()
+    return {"status": "success"}
 
 '''
 Construct live weather data of Baguio City, PH and Tokyo, Japan as a dataframe
@@ -34,25 +39,17 @@ def main():
     df = convert_to_df(responses)
     print(df)
 
-    host = os.getenv("DB_HOST")
-    port = os.getenv("DB_PORT")
-    db = os.getenv("DB_NAME")
-    user = os.getenv("DB_USER")
-    password = os.getenv("DB_PASSWORD")
+    uri = os.getenv("DB_URI")
     table = os.getenv("DB_TABLE1")
-    keys = {
-        "host": host,
-        "port": port,
-        "db": db,
-        "user": user,
-        "password": password
-    }    
-    db = DBServer(keys)
+    db = DBServer(uri)
     db.connect()
     # Map df dataframe correctly and add as a row to the database table
     for _, row in df.iterrows():
         query = query_add_row(table, row)
         db.execute_sql(query)
+    # Delete top two rows immediately
+    query = query_delete_top(table)
+    db.execute_sql(query)
     db.close()
     
 if __name__ == "__main__":

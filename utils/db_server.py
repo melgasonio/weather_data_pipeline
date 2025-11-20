@@ -1,22 +1,12 @@
-import psycopg2
+import psycopg
 
 class DBServer():
-    def __init__(self, keys):
-        self.keys = keys
-        self.conn = None
-        self.cur = None
+    def __init__(self, uri):
+        self.uri = uri
         
     def connect(self):
-        keys = self.keys
-        
         try:
-            self.conn = psycopg2.connect(
-                host=keys["host"],
-                port=keys["port"],
-                database=keys["db"],
-                user=keys["user"],
-                password=keys["password"]
-            )
+            self.conn = psycopg.connect(self.uri)
             self.cur = self.conn.cursor()
             print("Successfully connected to db")
         except Exception:

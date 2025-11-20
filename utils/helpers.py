@@ -35,7 +35,7 @@ def convert_to_kmh(windspeed):
 # Create a row in the database table based on the dataframe row
 def query_add_row(table, row):
         query = f"""
-                INSERT INTO {table} (timepulled, city, weather, temperature,  temperaturemin, temperaturemax, humidity, windspeed)
+                INSERT INTO {table} (created_at, city, weather, temperature,  temperature_min, temperature_max, humidity, wind_speed)
                 VALUES (
                         '{row['timestamp']}',
                         '{row['city']}',
@@ -46,5 +46,19 @@ def query_add_row(table, row):
                         {row['humidity']},
                         {row['wind_speed']}                     
                 )
+        """
+        return query
+
+# Delete top two results after adding two new records
+def query_delete_top(table):
+        query = f"""
+                WITH dispose as (
+                        SELECT id
+                        FROM {table}
+                        ORDER BY id
+                        LIMIT 2
+                )
+                DELETE FROM {table}
+                WHERE id in (SELECT id FROM dispose);                
         """
         return query
