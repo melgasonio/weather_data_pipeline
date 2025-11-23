@@ -1,4 +1,4 @@
-import psycopg
+import psycopg2
 
 class DBServer():
     def __init__(self, uri):
@@ -6,7 +6,7 @@ class DBServer():
         
     def connect(self):
         try:
-            self.conn = psycopg.connect(self.uri)
+            self.conn = psycopg2.connect(self.uri)
             self.cur = self.conn.cursor()
             print("Successfully connected to db")
         except Exception:
