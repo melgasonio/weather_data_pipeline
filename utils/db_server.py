@@ -7,6 +7,7 @@ class DBServer():
     def connect(self):
         try:
             self.conn = psycopg2.connect(self.uri)
+            self.conn.autocommit = True
             self.cur = self.conn.cursor()
             print("Successfully connected to db")
         except Exception:
@@ -20,7 +21,6 @@ class DBServer():
         
         if fetch:
             return self.cur.fetchall()
-        self.conn.commit()
     
     def close(self):
         if self.cur:
