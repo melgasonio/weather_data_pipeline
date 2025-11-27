@@ -7,6 +7,7 @@ def transform_weather_response(response, timestamp, name):
         transformed_data["timestamp"] = timestamp
         transformed_data["city"] = name
         transformed_data["weather"] = response["weather"][0]["description"]
+        transformed_data["icon_id"] = response["weather"][0]["icon"]
         
         transformed_data["temp"] = response["main"]["temp"]
         transformed_data["temp"] = convert_to_celsius(transformed_data["temp"])
@@ -35,16 +36,17 @@ def convert_to_kmh(windspeed):
 # Create a row in the database table based on the dataframe row
 def query_add_row(table, row):
         query = f"""
-                INSERT INTO {table} (created_at, city, weather, temperature,  temperature_min, temperature_max, humidity, wind_speed)
+                INSERT INTO {table} (created_at, city, weather, icon_id, temperature,  temperature_min, temperature_max, humidity, wind_speed)
                 VALUES (
                         '{row['timestamp']}',
                         '{row['city']}',
                         '{row['weather']}',
+                        '{row['icon_id']}',
                         {row['temp']},
                         {row['temp_min']},
                         {row['temp_max']},
                         {row['humidity']},
-                        {row['wind_speed']}                     
+                        {row['wind_speed']}                  
                 )
         """
         return query

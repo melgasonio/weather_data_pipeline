@@ -3,4 +3,3 @@ python-dotenv
 pandas
 numpy
 psycopg2-binary
-git

@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 from utils.openweathermap_api import OpenWeatherMap
 from utils.db_server import DBServer
@@ -20,7 +20,7 @@ def main():
     # Pull live weather data and leave a timestamp footprint
     load_dotenv()
     key = os.getenv("API_KEY")   
-    now = datetime.now().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     
     locations = [{"city": "Baguio City", "country_code": "PH"}, {"city": "Tokyo","country_code": "JP"}]
     responses= []
