@@ -4,8 +4,7 @@ from datetime import datetime, timezone
 
 from utils.openweathermap_api import OpenWeatherMap
 from utils.db_server import DBServer
-from utils.pandas import convert_to_df
-from utils.helpers import transform_weather_response, query_add_row, query_delete_top
+from utils.helpers import transform_weather_response, query_add_row, query_delete_top, convert_to_df
 
 # AWS Lambda handler
 def lambda_handler(event, context):
