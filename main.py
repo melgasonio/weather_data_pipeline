@@ -48,8 +48,8 @@ def main():
         query = query_add_row(table, row)
         db.execute_sql(query)
     # Delete top two rows immediately
-    query = query_delete_top(table)
-    db.execute_sql(query)
+    # query = query_delete_top(table)
+    # db.execute_sql(query)
     db.close()
     
 if __name__ == "__main__":
