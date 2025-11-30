@@ -9,7 +9,7 @@ Automated pipeline that collects, cleans, stores, and visualizes live weather da
 - Python ETL runs inside a Lambda function (Dockerized) and fires hourly using Eventbridge rule
 - Data stored in Supabase PostgreSQL
 - Visualization updated hourly in Looker Studio
-![data_pipeline](data_pipeline.png)
+[![report](pipeline.png)]
 
 ## Database Schema
 - `id`: type: int2, unique record identifier, auto-incrementing
