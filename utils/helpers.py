@@ -1,5 +1,4 @@
 import math
-import pandas as pd
 
 # Tranform a weather api response into a dict with specific keys
 def transform_weather_response(response, timestamp, name):
@@ -65,7 +64,3 @@ def query_delete_top(table):
                 WHERE id in (SELECT id FROM dispose);                
         """
         return query
-
-# Convert an array of dictionaries to a dataframe
-def convert_to_df(arr):
-    return pd.DataFrame(arr)
